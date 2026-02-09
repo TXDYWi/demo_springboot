@@ -8,6 +8,9 @@ import com.sky.result.Result;
 import com.sky.service.EmployeeService;
 import com.sky.utils.JwtUtil;
 import com.sky.vo.EmployeeLoginVO;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,9 +27,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin/employee")
 @Slf4j
+@Api(tags = "员工管理相关接口")
 public class EmployeeController {
 
     @Autowired
+    //注解功能：
     private EmployeeService employeeService;
     @Autowired
     private JwtProperties jwtProperties;
@@ -38,25 +43,26 @@ public class EmployeeController {
      * @return
      */
     @PostMapping("/login")
+    @ApiOperation("登录")
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
         log.info("员工登录：{}", employeeLoginDTO);
 
         Employee employee = employeeService.login(employeeLoginDTO);
 
         //登录成功后，生成jwt令牌
-        Map<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims = new HashMap<>();//存放有效载荷
         claims.put(JwtClaimsConstant.EMP_ID, employee.getId());
         String token = JwtUtil.createJWT(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),
-                claims);
+                claims);//包装成 token
 
         EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()
                 .id(employee.getId())
                 .userName(employee.getUsername())
                 .name(employee.getName())
                 .token(token)
-                .build();
+                .build();//builder()注解简化代码
 
         return Result.success(employeeLoginVO);
     }
@@ -67,6 +73,7 @@ public class EmployeeController {
      * @return
      */
     @PostMapping("/logout")
+    @ApiOperation("退出")
     public Result<String> logout() {
         return Result.success();
     }
