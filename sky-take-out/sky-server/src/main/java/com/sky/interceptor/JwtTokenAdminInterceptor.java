@@ -35,7 +35,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
         //判断当前拦截到的是Controller的方法还是其他资源
         if (!(handler instanceof HandlerMethod)) {
             //当前拦截到的不是动态方法，直接放行
-            return true;
+            return true; 
         }
 
         //1、从请求头中获取令牌
