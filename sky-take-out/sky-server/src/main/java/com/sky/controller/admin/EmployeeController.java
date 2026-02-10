@@ -31,8 +31,7 @@ import java.util.Map;
 @Api(tags = "员工管理相关接口")
 public class EmployeeController {
 
-    @Autowired
-    //注解功能：
+    @Autowired //注入员工服务对象
     private EmployeeService employeeService;
     @Autowired
     private JwtProperties jwtProperties;
